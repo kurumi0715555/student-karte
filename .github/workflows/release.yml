@@ -21,10 +21,16 @@ jobs:
         run: |
           git archive --format=zip --prefix=student-karte/ \
             -o "student-karte_${GITHUB_REF_NAME}.zip" "${GITHUB_REF_NAME}"
+          # ファイル名が変わらない固定名のコピーも作る。
+          # これで「常に最新版」を指す直リンクが作れる:
+          # https://github.com/<owner>/<repo>/releases/latest/download/student-karte.zip
+          cp "student-karte_${GITHUB_REF_NAME}.zip" student-karte.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: 生徒カルテ ${{ github.ref_name }}
-          files: student-karte_*.zip
+          files: |
+            student-karte_*.zip
+            student-karte.zip
           generate_release_notes: true

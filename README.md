@@ -11,7 +11,7 @@
 
 ## 使い方（3ステップ)
 
-1. **ダウンロード** — [Releases](../../releases) から最新のZIPをダウンロードして展開します
+1. **ダウンロード** — **[⬇ 最新版をダウンロード](https://github.com/kurumi0715555/student-karte/releases/latest/download/student-karte.zip)**（ZIPを展開してください。過去のバージョンは [Releases](../../releases) から）
 2. **開く** — フォルダ内の `index.html` を Chrome または Edge でダブルクリックして開きます
 3. **はじめる** — 「テンプレートを発行」→ Excelで名簿を入力 → 「名簿ファイルを開く」
 
