@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>生徒カルテ — 生徒情報をExcel1冊で管理</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-title">
+    <span class="app-logo">📋</span>
+    <h1>生徒カルテ</h1>
+    <span class="app-tagline">生徒情報を、Excel 1冊で。</span>
+  </div>
+  <div class="app-header-right">
+    <label class="nendo-select">年度
+      <select id="nendoSelect"></select>
+    </label>
+    <span id="saveStatus" class="save-status" hidden></span>
+    <a href="help.html" class="help-link" title="使い方">❓ 使い方</a>
+  </div>
+</header>
+
+<!-- ============ 起動画面 ============ -->
+<section id="startView" class="start-view">
+  <div class="start-card">
+    <h2>はじめる</h2>
+    <p class="start-lead">生徒の名簿・記録・成績を、お手元の Excel ファイル1冊を正本として管理するツールです。</p>
+    <div class="start-actions">
+      <button id="btnOpenFile" class="btn btn-primary btn-large">📂 名簿ファイルを開く</button>
+      <button id="btnTemplate" class="btn btn-secondary btn-large">📄 テンプレートを発行する</button>
+    </div>
+    <p class="start-note" id="startModeNote"></p>
+    <p class="start-note">はじめての方は <a href="help.html">使い方の説明ページ</a> をご覧ください。</p>
+    <div class="privacy-note">
+      <strong>🔒 データはこのPCの中だけで完結します。</strong><br>
+      入力した情報がインターネットに送信されることは一切ありません。
+      ファイルの保管は学校の情報管理規程に従ってください。
+    </div>
+  </div>
+</section>
+
+<div id="noticeArea"></div>
+
+<!-- ============ ホーム（受付画面） ============ -->
+<section id="homeView" class="home-view" hidden>
+  <div class="home-card">
+    <label class="home-search-label" for="homeSearch">生徒を探す</label>
+    <input type="search" id="homeSearch" class="home-search" placeholder="氏名・ふりがな・IDを入力…" autocomplete="off">
+    <div id="homeResults" class="home-results"></div>
+  </div>
+  <div class="home-actions">
+    <button id="btnHomeAdd" class="home-action-btn">👤<span>新規生徒登録</span></button>
+    <button id="btnHomeList" class="home-action-btn">📖<span>名簿一覧</span></button>
+    <button id="btnHomePromote" class="home-action-btn">🔀<span>進級取り込み</span></button>
+    <button id="btnHomeGrades" class="home-action-btn">💯<span>成績取り込み</span></button>
+    <button id="btnHomeSummary" class="home-action-btn">📊<span>集計</span></button>
+    <button id="btnHomeBackup" class="home-action-btn">💾<span>バックアップ保存</span></button>
+    <button id="btnHomeManualSave" class="home-action-btn manual-save-btn home-action-warn" hidden>⚠<span>保存（ダウンロード）</span></button>
+  </div>
+  <p id="homeStats" class="home-stats"></p>
+  <p class="footer-note">
+    ⚠ このツールで編集している間は、同じファイルをExcelで開かないでください。
+    🔒 データはこのPC内で完結し、外部には送信されません。
+  </p>
+</section>
+
+<!-- ============ 名簿一覧 ============ -->
+<section id="mainView" class="main-view" hidden>
+
+  <div class="toolbar">
+    <div class="toolbar-row">
+      <label>学年
+        <select id="filterGrade">
+          <option value="all">全学年</option>
+          <option value="1">1年</option>
+          <option value="2">2年</option>
+          <option value="3">3年</option>
+          <option value="other">対象外・卒業</option>
+        </select>
+      </label>
+      <label>クラス
+        <select id="filterClass"><option value="all">全クラス</option></select>
+      </label>
+      <label>在籍
+        <select id="filterStatus">
+          <option value="在籍">在籍のみ</option>
+          <option value="all">すべて</option>
+          <option value="転出">転出</option>
+          <option value="卒業">卒業</option>
+        </select>
+      </label>
+      <input type="search" id="searchBox" placeholder="氏名・ふりがな・IDで検索">
+      <label class="toggle-sensitive">
+        <input type="checkbox" id="toggleSensitive"> 個人情報・支援の列を表示
+      </label>
+    </div>
+    <div class="toolbar-row">
+      <button id="btnHome" class="btn btn-secondary btn-small">🏠 ホーム</button>
+      <button id="btnAddStudent" class="btn btn-primary btn-small">＋ 生徒を追加</button>
+      <button id="btnPromote" class="btn btn-secondary btn-small">🔀 進級取り込み</button>
+      <button id="btnGradesImport" class="btn btn-secondary btn-small">💯 成績取り込み</button>
+      <button id="btnCopyTsv" class="btn btn-secondary btn-small">📋 一覧をコピー</button>
+      <button id="btnSummary" class="btn btn-secondary btn-small">📊 集計</button>
+      <button id="btnGraduate" class="btn btn-secondary btn-small">🎓 卒業処理</button>
+      <button id="btnBackup" class="btn btn-secondary btn-small">💾 バックアップ保存</button>
+      <button id="btnManualSave" class="btn btn-warning btn-small manual-save-btn" hidden>⚠ 保存（ダウンロード）</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="rosterTable"></table>
+    <p id="emptyMessage" class="empty-message" hidden>表示できる生徒がいません。フィルタを確認してください。</p>
+  </div>
+
+  <p class="footer-note">
+    ⚠ このツールで編集している間は、同じファイルをExcelで開かないでください。
+    🔒 データはこのPC内で完結し、外部には送信されません。
+  </p>
+</section>
+
+<!-- ============ 生徒カルテパネル ============ -->
+<div id="kartePanel" class="karte-panel" hidden>
+  <div class="karte-inner">
+    <div class="karte-header">
+      <div>
+        <h2 id="karteName"></h2>
+        <span id="karteMeta" class="karte-meta"></span>
+      </div>
+      <div class="karte-header-btns">
+        <button id="btnPrintKarte" class="btn btn-secondary btn-small">🖨 カルテ印刷</button>
+        <button id="btnCloseKarte" class="btn btn-ghost btn-small">✕ 閉じる</button>
+      </div>
+    </div>
+    <div class="karte-tabs">
+      <button class="karte-tab active" data-tab="basic">基本情報</button>
+      <button class="karte-tab" data-tab="records">記録</button>
+      <button class="karte-tab" data-tab="grades">成績</button>
+      <button class="karte-tab" data-tab="relations">関係</button>
+    </div>
+    <div id="karteBody" class="karte-body"></div>
+  </div>
+</div>
+
+<!-- ============ 汎用モーダル ============ -->
+<div id="modalOverlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button id="modalClose" class="btn btn-ghost btn-small">✕</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/xlsx.full.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

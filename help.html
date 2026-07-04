@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>使い方 — 生徒カルテ</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .doc-wrap { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
+  .doc-nav {
+    background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 18px 24px; margin-bottom: 24px;
+  }
+  .doc-nav h2 { font-size: 1em; color: var(--primary); margin-bottom: 8px; }
+  .doc-nav ol { margin: 0; padding-left: 22px; columns: 2; font-size: 0.95em; }
+  .doc-nav a { color: var(--primary); text-decoration: none; }
+  .doc-nav a:hover { text-decoration: underline; }
+  .doc-section {
+    background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 24px 28px; margin-bottom: 20px;
+  }
+  .doc-section h2 {
+    color: var(--primary); font-size: 1.25em;
+    border-bottom: 2px solid var(--gray-light); padding-bottom: 8px; margin-bottom: 14px;
+  }
+  .doc-section h3 { color: var(--accent); font-size: 1.05em; margin: 18px 0 8px; }
+  .doc-section p { margin: 8px 0; }
+  .doc-section ul, .doc-section ol { margin: 8px 0; padding-left: 24px; }
+  .doc-section li { margin: 4px 0; }
+  .doc-hint { background: var(--info-bg); border-left: 4px solid var(--primary); border-radius: 4px; padding: 10px 14px; font-size: 0.92em; margin: 12px 0; }
+  .doc-warn { background: var(--warning-bg); border-left: 4px solid var(--warning); border-radius: 4px; padding: 10px 14px; font-size: 0.92em; margin: 12px 0; }
+  .doc-steps { counter-reset: step; list-style: none; padding-left: 0; }
+  .doc-steps > li { counter-increment: step; position: relative; padding-left: 40px; margin: 10px 0; }
+  .doc-steps > li::before {
+    content: counter(step); position: absolute; left: 0; top: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--primary); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85em; font-weight: 700;
+  }
+  .kbd, code {
+    background: var(--gray-lighter); border: 1px solid var(--gray); border-radius: 4px;
+    padding: 1px 7px; font-size: 0.9em; font-family: 'Courier New', monospace;
+  }
+  .doc-table { border-collapse: collapse; width: 100%; font-size: 0.92em; margin: 10px 0; }
+  .doc-table th { background: var(--primary); color: var(--white); padding: 7px 12px; text-align: left; }
+  .doc-table td { padding: 6px 12px; border-bottom: 1px solid var(--gray-light); }
+  .doc-table tr:nth-child(even) td { background: var(--gray-lighter); }
+  .btn-sample { display: inline-block; background: var(--primary); color: var(--white); border-radius: 6px; padding: 2px 12px; font-size: 0.88em; }
+  .btn-sample.gray { background: var(--accent); }
+  .back-link { display: inline-block; margin-bottom: 16px; color: var(--primary); font-weight: 700; text-decoration: none; }
+  .back-link:hover { text-decoration: underline; }
+  .faq-q { font-weight: 700; color: var(--primary); margin-top: 14px; }
+  .faq-a { margin: 4px 0 0 1.2em; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-title">
+    <span class="app-logo">📋</span>
+    <h1>生徒カルテ — 使い方</h1>
+  </div>
+  <div class="app-header-right">
+    <a href="index.html" style="color:#fff; font-size:0.9em">← ツールに戻る</a>
+  </div>
+</header>
+
+<div class="doc-wrap">
+
+<nav class="doc-nav">
+  <h2>もくじ</h2>
+  <ol>
+    <li><a href="#about">このツールについて</a></li>
+    <li><a href="#start">はじめかた（3ステップ）</a></li>
+    <li><a href="#save">保存の仕組み</a></li>
+    <li><a href="#home">ホーム画面（受付）</a></li>
+    <li><a href="#karte">生徒カルテ</a></li>
+    <li><a href="#list">名簿一覧</a></li>
+    <li><a href="#promote">進級取り込み</a></li>
+    <li><a href="#grades">成績取り込み</a></li>
+    <li><a href="#misc">その他の機能</a></li>
+    <li><a href="#excel">Excelを直接編集するとき</a></li>
+    <li><a href="#id">生徒IDのルール</a></li>
+    <li><a href="#privacy">データの安全について</a></li>
+    <li><a href="#faq">よくある質問</a></li>
+  </ol>
+</nav>
+
+<section class="doc-section" id="about">
+  <h2>1. このツールについて</h2>
+  <p>「生徒カルテ」は、生徒の名簿・指導や支援の記録・テスト成績・生徒同士の配慮関係を、<strong>お手元のExcelファイル1冊</strong>にまとめて管理するツールです。病院の電子カルテのように、生徒の名前で呼び出して、その子のすべての情報を1画面で見られます。</p>
+  <ul>
+    <li><strong>登録不要・インストール不要</strong> — このフォルダとExcelファイルだけで動きます</li>
+    <li><strong>データは常にExcelファイルが正本</strong> — ツールはそれを読み書きするだけ。Excelで直接編集もできます</li>
+    <li><strong>3年間つながる</strong> — 生徒には変わらないIDが付き、進級・クラス替えをしても記録が途切れません</li>
+    <li><strong>インターネット送信ゼロ</strong> — 入力した情報はこのPCの外に出ません</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="start">
+  <h2>2. はじめかた（3ステップ）</h2>
+  <ol class="doc-steps">
+    <li><strong>テンプレートを発行する</strong><br>
+      <code>index.html</code> をChromeまたはEdgeで開き、<span class="btn-sample gray">📄 テンプレートを発行する</span> を押すと <code>生徒カルテ.xlsx</code> がダウンロードされます。</li>
+    <li><strong>Excelで名簿を入力する</strong><br>
+      テンプレートをExcelで開き、「名簿」シートに生徒を入力します。校務支援システムの名簿から氏名・ふりがな等を列ごと貼り付けるのが早いです。生徒IDは先頭に1つ入力してオートフィルで連番に（例: 8001, 8002, …）。サンプル行は削除してください。</li>
+    <li><strong>ツールで開く</strong><br>
+      <span class="btn-sample">📂 名簿ファイルを開く</span> からそのファイルを選びます。「編集の保存」を許可すると、以後の編集は自動でExcelファイルに保存されます。</li>
+  </ol>
+  <div class="doc-hint">💡 まず試したい場合は、サンプルデータ入りのExcel（<code>生徒カルテ_サンプル.xlsx</code>）を開けば、49名分の架空データで全機能を体験できます。</div>
+  <div class="doc-hint">📁 <strong>おすすめの運用：ファイルは「入学年度ごとに1冊」</strong><br>
+  例: <code>生徒カルテ_R8入学.xlsx</code>。進級してもファイルはそのままで、年度が替わると表示学年が自動で上がります。卒業したらファイルごと保管すれば完了です。学年団での管理・引き継ぎとも一致します。</div>
+</section>
+
+<section class="doc-section" id="save">
+  <h2>3. 保存の仕組み</h2>
+  <h3>Chrome / Edge の場合（推奨）</h3>
+  <p>ファイルを開くときに「編集の保存を許可」すると、<strong>編集するたびに自動でExcelファイルに上書き保存</strong>されます。保存ボタンを押す必要はありません。画面右上に「✓ 保存済み」と表示されていれば安心です。</p>
+  <h3>Safari / Firefox の場合</h3>
+  <p>自動上書きが使えないため、編集すると右上に「未保存の変更 ◯件」と表示されます。<span class="btn-sample" style="background:#e65100">⚠ 保存（ダウンロード）</span> を押して新しいExcelファイルをダウンロードし、<strong>元のファイルと差し替えて</strong>ください。</p>
+  <div class="doc-warn">⚠ <strong>ツールで編集している間は、同じファイルをExcelで開かないでください。</strong>Excelがファイルをロックするため保存に失敗します（失敗した場合は右上に赤く表示され、Excelを閉じてから「再保存」できます。入力内容は消えません）。</div>
+  <h3>バックアップ</h3>
+  <p>ファイルを開いた直後に「今日のバックアップを保存」の案内が出ます。1日1回、作業前に保存しておくのがおすすめです（ホームの <span class="btn-sample gray">💾 バックアップ保存</span> からいつでも保存できます）。</p>
+</section>
+
+<section class="doc-section" id="home">
+  <h2>4. ホーム画面（受付）</h2>
+  <p>ファイルを開くと最初に表示される画面です。病院の受付のように、<strong>生徒を検索して呼び出す</strong>のが基本の使い方です。</p>
+  <ul>
+    <li><strong>生徒を探す</strong> — 氏名・ふりがな・IDのどれでも検索できます。ひらがなだけでもOK。候補をクリックするとその子のカルテが開きます</li>
+    <li><strong>業務ボタン</strong> — 新規生徒登録／名簿一覧／進級取り込み／成績取り込み／集計／バックアップ保存</li>
+    <li><strong>当日サマリー</strong> — 在籍数と、今日書いた記録の件数が下に表示されます</li>
+  </ul>
+  <p>ヘッダーの<strong>年度セレクタ</strong>（R8 など）を切り替えると、その年度時点の学年・クラス・番号で全画面が表示されます。</p>
+</section>
+
+<section class="doc-section" id="karte">
+  <h2>5. 生徒カルテ</h2>
+  <p>生徒1人のすべての情報を集めた画面です。4つのタブがあります。</p>
+  <table class="doc-table">
+    <tr><th>タブ</th><th>内容</th></tr>
+    <tr><td>基本情報</td><td>氏名・連絡先・クラブ・支援計画・各学年のクラスと番号など。編集して「この内容で保存」</td></tr>
+    <tr><td>記録</td><td>日付・種別（指導/支援/面談/保護者対応/健康/クラブ/その他）つきのメモを時系列で追記。3年間积み重なります</td></tr>
+    <tr><td>成績</td><td>テストの点数の一覧。1件ずつの追加もここから（クラス全員分は「成績取り込み」が便利）</td></tr>
+    <tr><td>関係</td><td>「同クラス不可」「同クラス推奨」「要注意」など、他の生徒との配慮関係を登録</td></tr>
+  </table>
+  <p>🔒マークのついた項目（住所・連絡先・健康メモ・支援計画）は個人情報として扱われ、一覧では標準で非表示です。</p>
+  <h3>カルテ印刷</h3>
+  <p>カルテ右上の <span class="btn-sample gray">🖨 カルテ印刷</span> で、その子の基本情報・記録・成績を1枚に印刷できます。三者懇談の手元資料や学年末の引き継ぎに。<strong>個人情報と指導・支援・健康の記録は、チェックを入れない限り印刷されません。</strong></p>
+</section>
+
+<section class="doc-section" id="list">
+  <h2>6. 名簿一覧</h2>
+  <p>クラス単位で眺めたり、一括作業をするための画面です。ホームの <span class="btn-sample gray">📖 名簿一覧</span> から開き、<span class="btn-sample gray">🏠 ホーム</span> で戻ります。</p>
+  <ul>
+    <li><strong>絞り込み</strong> — 学年・クラス・在籍状態（在籍/転出/卒業）・キーワード検索</li>
+    <li><strong>並べ替え</strong> — 列見出しをクリック。標準はクラス→番号順</li>
+    <li><strong>個人情報の列</strong> — 「個人情報・支援の列を表示」にチェックを入れたときだけ表示されます。教室で投影する場面ではオフのままに</li>
+    <li><strong>行をクリック</strong>するとカルテが開きます</li>
+  </ul>
+  <h3>一覧をコピー（他ツール連携）</h3>
+  <p><span class="btn-sample gray">📋 一覧をコピー</span> で、今の絞り込み・並び順のまま選んだ列をコピーできます。座席表ツールやExcelにそのまま貼り付けられます。</p>
+</section>
+
+<section class="doc-section" id="promote">
+  <h2>7. 進級取り込み（年度替わりの作業）</h2>
+  <p>新年度のクラス・出席番号を一括登録します。<strong>1人ずつ入力する必要はありません。</strong></p>
+  <ol class="doc-steps">
+    <li>ヘッダーの年度を<strong>新しい年度</strong>に切り替える（例: R8 → R9）</li>
+    <li><span class="btn-sample gray">🔀 進級取り込み</span> を開き、書き込み先（2年クラス・番号 など）を選ぶ</li>
+    <li>校務支援システム等の<strong>新クラス編成表</strong>（新クラス・新番号・氏名の表）をExcelでコピーし、貼り付け欄にペースト</li>
+    <li>「照合する」— 氏名で名簿と自動照合されます
+      <ul>
+        <li>🟢 一致した生徒はそのまま</li>
+        <li>🔴 同名が複数いる・見つからない場合は、その行だけ手動で選択（無視もできます）</li>
+        <li>🟡 編成表に載っていない在籍生徒は「転出漏れの可能性」として表示</li>
+      </ul></li>
+    <li>「確定して書き込む」で一括登録</li>
+  </ol>
+  <div class="doc-hint">💡 <strong>「同クラス不可」の自動チェック：</strong>カルテの関係タブで「同クラス不可」を登録しておくと、そのペアが同じクラスに配置されていた場合、書き込み前に赤い警告が表示されます。</div>
+</section>
+
+<section class="doc-section" id="grades">
+  <h2>8. 成績取り込み</h2>
+  <p>採点表からテストの点数を一括登録します。<strong>採点用テンプレートから始めるのがおすすめ</strong>です。</p>
+  <h3>おすすめ：採点用テンプレートを使う</h3>
+  <ol class="doc-steps">
+    <li><span class="btn-sample gray">💯 成績取り込み</span> を開き、学年・クラスを選んで「採点用テンプレートを発行」<br>
+      生徒ID・番号・氏名が番号順に入ったExcel（<code>採点表_R8_2年1組.xlsx</code> など）がダウンロードされます</li>
+    <li>Excelで教科の列に点数を入力（教科名は自由に変更・追加できます）</li>
+    <li>表全体をコピーして貼り付け欄にペースト → 年度・学期・テスト名を入れて「照合する」<br>
+      <strong>生徒IDで照合されるため、同姓同名がいても間違えません</strong></li>
+    <li>「確定して登録」— 各生徒のカルテに点数が入ります（空欄はスキップ）</li>
+  </ol>
+  <h3>手持ちの採点表を貼り付ける場合</h3>
+  <p>1行目に見出し（氏名・教科名）のある表なら、そのままコピーして貼り付けられます。この場合は氏名で照合します（同姓同名は手動で選択）。「ふりがな」「クラス」「番号」「合計」「平均」などの列が混ざっていても自動で無視されます。</p>
+</section>
+
+<section class="doc-section" id="misc">
+  <h2>9. その他の機能</h2>
+  <table class="doc-table">
+    <tr><th>機能</th><th>説明</th></tr>
+    <tr><td>👤 新規生徒登録</td><td>転入生を1名追加。IDは自動で発番されます。新入学の一括登録はExcelに直接貼り付けが早いです</td></tr>
+    <tr><td>📊 集計</td><td>学年・クラス別人数、クラブ別、委員会別、月別誕生日、支援計画の人数</td></tr>
+    <tr><td>🎓 卒業処理</td><td>年度末に、3年生全員の在籍を「卒業」に一括変更（確認あり）</td></tr>
+    <tr><td>転出の処理</td><td>カルテの基本情報で「在籍」を「転出」に変更。<strong>行は削除しません</strong>（記録が消えないように）</td></tr>
+  </table>
+</section>
+
+<section class="doc-section" id="excel">
+  <h2>10. Excelを直接編集するとき</h2>
+  <p>一括の入力・修正はExcelでやったほうが早いこともあります。以下のルールだけ守れば自由に編集できます。</p>
+  <ul>
+    <li><strong>ツールを閉じてから</strong>Excelで開く（同時に開かない）</li>
+    <li><strong>生徒IDは絶対に変更・削除しない</strong>（すべての記録がIDで紐づいています）</li>
+    <li><strong>行を削除しない</strong> — 転出・卒業は「在籍」列で管理</li>
+    <li>1行目の<strong>列見出しは変更しない</strong>。列の追加は自由（ツールが保持して書き戻します）</li>
+    <li>シート名（名簿・記録・関係・成績）は変更しない。独自シートの追加は自由</li>
+  </ul>
+  <table class="doc-table">
+    <tr><th>シート</th><th>役割</th></tr>
+    <tr><td>名簿</td><td>1行=1生徒。氏名・連絡先・各学年のクラスと番号・在籍状態</td></tr>
+    <tr><td>記録</td><td>1行=1記録。日付・生徒ID・種別・内容・記録者</td></tr>
+    <tr><td>関係</td><td>1行=1ペア。同クラス不可などの配慮関係</td></tr>
+    <tr><td>成績</td><td>1行=1点数。年度・学期・テスト名・教科・点数</td></tr>
+  </table>
+</section>
+
+<section class="doc-section" id="id">
+  <h2>11. 生徒IDのルール</h2>
+  <p>生徒IDは「<strong>入学年度（令和）＋連番3桁</strong>」です。</p>
+  <ul>
+    <li>R8年度入学 → <code>8001</code>, <code>8002</code>, … ／ R10年度入学 → <code>10001</code>, …</li>
+    <li>入学時に五十音順などで一括発番し、<strong>卒業まで変更しません</strong></li>
+    <li>クラスや出席番号はIDに含めません（毎年変わるものは名簿の列で管理）</li>
+    <li>転入生は同じ学年の末尾の連番（例: <code>8151</code>）。ツールで追加すると自動発番されます</li>
+    <li>学年はIDから自動計算されます（現在年度 − 入学年度 + 1）。年度が替われば全員自動で進級表示になります</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="privacy">
+  <h2>12. データの安全について</h2>
+  <ul>
+    <li>入力した情報は<strong>インターネットに一切送信されません</strong>。保存先はお使いのPCのExcelファイルだけです</li>
+    <li>ブラウザ内にもデータを残しません（閉じれば何も残らない）</li>
+    <li>住所・連絡先・健康・支援の情報は、一覧・集計・印刷のすべてで<strong>標準非表示</strong>です</li>
+    <li>Excelファイル自体の保管（保存場所・持ち出し・パスワード付きUSB等）は、<strong>学校の情報管理規程に従ってください</strong></li>
+    <li>パスワード付きExcelファイルはツールで開けません。ファイル保護は保管場所側で行ってください</li>
+  </ul>
+</section>
+
+<section class="doc-section" id="faq">
+  <h2>13. よくある質問</h2>
+  <p class="faq-q">Q. 「保存に失敗」と赤く表示された</p>
+  <p class="faq-a">同じファイルをExcelで開いていませんか？ Excelを閉じてから右上の「再保存」を押してください。入力した内容は消えていません。</p>
+  <p class="faq-q">Q. ダブルクリックで開いたら真っ白／崩れて表示される</p>
+  <p class="faq-a">フォルダごと移動してください。<code>index.html</code> だけをコピーすると、デザインやプログラムのファイル（css・jsフォルダ）が見つからず動きません。</p>
+  <p class="faq-q">Q. 進級取り込みで同姓同名がいて照合できない</p>
+  <p class="faq-a">その行だけ赤く表示されるので、ドロップダウンから正しい生徒を選んでください。編成表にふりがなの列があれば自動で見分けられます。</p>
+  <p class="faq-q">Q. 間違えて記録を書いてしまった</p>
+  <p class="faq-a">記録の右上の「削除」で消せます（確認あり）。生徒本体の行は削除できない設計です。</p>
+  <p class="faq-q">Q. 学年に「卒業済」「—」と表示される生徒がいる</p>
+  <p class="faq-a">生徒IDの入学年度と表示中の年度から自動計算した結果です。ヘッダーの年度セレクタが正しいか確認してください。</p>
+  <p class="faq-q">Q. 別のPCでも使える？</p>
+  <p class="faq-a">使えます。このフォルダとExcelファイルを一緒に持っていけば、Chrome/Edgeのあるどの端末でも同じように動きます。</p>
+</section>
+
+<p style="text-align:center"><a class="back-link" href="index.html">← ツールに戻る</a></p>
+
+</div>
+</body>
+</html>
