@@ -1,0 +1,7 @@
+# git archive（配布ZIP自動生成）で除外するファイル
+# アプリの動作に不要な開発用ファイルは配布物に含めない
+.github/ export-ignore
+scripts/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+CLAUDE.md export-ignore

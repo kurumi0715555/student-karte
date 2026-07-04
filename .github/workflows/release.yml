@@ -1,0 +1,30 @@
+name: Release
+
+# タグ（v1.3.0 のような形）がpushされたら自動で
+# 配布用ZIPを作ってGitHub Releaseに公開する。
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build distribution zip
+        run: |
+          git archive --format=zip --prefix=student-karte/ \
+            -o "student-karte_${GITHUB_REF_NAME}.zip" "${GITHUB_REF_NAME}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: 生徒カルテ ${{ github.ref_name }}
+          files: student-karte_*.zip
+          generate_release_notes: true
